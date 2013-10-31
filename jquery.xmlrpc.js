@@ -120,6 +120,9 @@
 		if ($fault.length === 0) {
 			var $params = $response.find('> params > param > value > *');
 			var json = $params.toArray().map(xmlrpc.parseNode);
+			// some services return value without type marker/tag such as : <?xml version="1.0" encoding="utf-8"?><methodResponse><params><param><value>10179064811</value></param></params></methodResponse> 
+			if (json.length === 0)
+				json = $response.find('> params > param > value').text();
 			return json;
 		} else {
 			var fault = xmlrpc.parseNode($fault.find('> value > *').get(0));
